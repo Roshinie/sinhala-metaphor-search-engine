@@ -55,13 +55,13 @@ def search(phrase,search_type):
         if counted_list == False:     # If the query contain a number call sort query
             query_body = queries.fuzzy_multi_match(phrase, fields)
         else:
-            query_body = queries.sorted_fuzzy_multi_match(phrase, num, fields)
+            query_body = queries.fuzzy_multi_match(phrase, fields)
 
     elif (search_type == "title_only"):
         if (isEnglish(phrase)==True):
             query_body = queries.single_phrase_match(phrase, "title_en")
         else:
-            query_body = queries.single_phrase_match(phrase, "title_sn")
+            query_body = queries.single_phrase_match(phrase, "title_si")
 
     elif (search_type == "lyricist_only"):
         if (isEnglish(phrase)==True):

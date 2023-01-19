@@ -1,5 +1,5 @@
 <!-- <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css"> -->
-<link href="main.css" rel="stylesheet">
+<!-- <link href="main.css" rel="stylesheet"> -->
 <!-- <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script> -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
@@ -23,7 +23,8 @@
 	} */ 
 	#songs {
 		outline: 2px solid rgb(96, 26, 228);
-		border-radius: 5;
+		border-radius: 3%;
+		background-color: rgb(226, 221, 243);
 	}
 
 	</style>
@@ -33,12 +34,14 @@
 	function MyFunction(aggregate){
 		keyword = aggregate.name;
 		console.log("keyword: "+keyword);
-		songs_array = document.getElementsByClassName('search-result row');
+		songs_array = document.getElementsByClassName('row search-result');
+		console.log(songs_array);
 		songs_array = Array.from(songs_array);
 		matching_songs = songs_array.filter(keyword_filter,keyword);
 		len_matching = matching_songs.length;
 		len_original = songs_array.length;
 		section = document.getElementById('song_section');
+		console.log(section)
 		section.innerHTML = matching_songs.map(e => e.outerHTML).join()
 		console.log(section);
 		header = document.getElementById('results');
@@ -101,17 +104,18 @@
 	</form> -->
 
 	{% if hits %}
-    <hgroup class="mb20">
+    <div class="mt-4">
 		<h2>Search Results</h2>
 		<h2 class="lead" id="results"><strong class="text-danger">{{ num_results }}</strong> results were found for the search for <strong class="text-danger">{{  query  }}</strong></h2>
-	</hgroup>
+	</div>
+	<br>
 	<h4><span>Tags: </span><ul id="tags" style="display: inline-block"></ul></h4>
-
+	<br>
 	<div class="container">
 		<div class="row">
 		  <div id='song_section' class="col-md-9">
 				{% for hit in hits %}
-				<div class="row" id="songs">
+				<div class="row search-result" id="songs">
 					<div class="col-md-7">
 						<h4>{{ hit._source.title_si }} - {{ hit._source.title_en }}</h4>
 						<ul class="meta-search">
@@ -120,7 +124,7 @@
 							<li><i class="glyphicon glyphicon-tags"></i> <span class="font-weight-bold">Lyricist : </span><span>{{ hit._source.lyricist_si }}</span></li>
 							<li><i class="glyphicon glyphicon-tags"></i> <span class="font-weight-bold">Metaphor/s : </span><span>{{ hit._source.metaphor }}</span></li>
 							<li><i class="glyphicon glyphicon-tags"></i> <span class="font-weight-bold">Metaphor Source Domain/s : </span><span>{{ hit._source.source_domain_si }}</span></li>
-							<li><i class="glyphicon glyphicon-tags"></i> <span class="font-weight-bold">Metaphor Target Domain/s : </span><span>{{ hit._source.source_domain_en }}</span></li>
+							<li><i class="glyphicon glyphicon-tags"></i> <span class="font-weight-bold">Metaphor Target Domain/s : </span><span>{{ hit._source.target_domain_si }}</span></li>
 						</ul>
 					</div>
 					<div class="col-md-4">
@@ -128,6 +132,7 @@
 					</div>
 				</div>
 				<span class="clearfix borda"></span>
+				<br>
 				{% endfor %}
 		  </div>
 
@@ -145,15 +150,15 @@
 
 	{% else %}
 		{% if init %}
-		<hgroup class="mb20">
+		<div class="mt-4">
 			<!-- <h1>Sinhala Song Search Engine</h1>
 			<h2 class="lead">Please enter the search query in the box</strong></h2> -->
-		</hgroup>
+		</div>
 		{% else %}
-		<hgroup class="mb20 mt-2">
+		<div class="my-4">
 			<h1>Search Results</h1>
-			<h2 class="lead"><strong class="text-danger">0</strong> results were found for the search for <strong class="text-danger">{{  query  }}</strong></h2>
-		</hgroup>
+			<h2 class="lead"><strong class="text-danger">0</strong> results were found for the search :<strong class="text-danger">{{  query  }}</strong></h2>
+		</div>
 		{% endif %}
 	{% endif %}
 </div>

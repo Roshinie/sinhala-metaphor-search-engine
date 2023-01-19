@@ -90,8 +90,8 @@ def fuzzy_multi_match(query, fields, operator ='or'):
                 "fuzziness": "AUTO", # The number of character edits (insert, delete, substitute) to get the required term
                 "fuzzy_transpositions": True, # Allow character swaps
                 "lenient": False, # Avoid data type similarity requirement
-                "prefix_length": 0, 
-                "max_expansions": 50,
+                "prefix_length": 0, # Number of beginning characters left unchanged when creating expansions
+                "max_expansions": 50, # Maximum number of variations created. Defaults to 50.
                 "auto_generate_synonyms_phrase_query": True,
                 "zero_terms_query": "none"
 			}
