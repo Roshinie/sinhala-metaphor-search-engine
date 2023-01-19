@@ -1,0 +1,159 @@
+<!-- <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css"> -->
+<link href="main.css" rel="stylesheet">
+<!-- <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script> -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+	/* .btn {
+	  background-color: DodgerBlue;
+	  border: none;
+	  color: white;
+	  padding: 12px 16px;
+	  font-size: 16px;
+	  cursor: pointer;
+	}
+	
+	/* Darker background on mouse-over */
+	/* .btn:hover {
+	  background-color: RoyalBlue;
+	} */ 
+	#songs {
+		outline: 2px solid rgb(96, 26, 228);
+		border-radius: 5;
+	}
+
+	</style>
+
+<!------ Include the above in your HEAD tag ---------->
+<script>
+	function MyFunction(aggregate){
+		keyword = aggregate.name;
+		console.log("keyword: "+keyword);
+		songs_array = document.getElementsByClassName('search-result row');
+		songs_array = Array.from(songs_array);
+		matching_songs = songs_array.filter(keyword_filter,keyword);
+		len_matching = matching_songs.length;
+		len_original = songs_array.length;
+		section = document.getElementById('song_section');
+		section.innerHTML = matching_songs.map(e => e.outerHTML).join()
+		console.log(section);
+		header = document.getElementById('results');
+		header.innerHTML = `<h2 class="lead" id="results"><strong class="text-danger">${len_matching}</strong> results out of ${len_original} matches the criteria</h2>`;
+
+		var tags_ul = document.getElementById("tags");
+		var tags_li = document.createElement("li");
+		tags_li.setAttribute("style","display:inline-block; padding:15px; margin:10px; border: 2px solid blue; border-radius: 5px;");
+		tags_li.appendChild(document.createTextNode(keyword));
+		tags_ul.appendChild(tags_li);
+	}
+
+	function keyword_filter(element){
+		keyword = this;
+		content = element.innerText;
+		return content.includes(keyword)
+	}
+
+</script>
+
+
+
+<!-- As a heading -->
+<nav class="navbar navbar-dark bg-dark">
+	<span class="navbar-brand mb-0 h1">metaphor-art</span>
+</nav>
+<div class="jumbotron my-0">
+	<h2 class="display-6">Explore metaphor art in sinhala songs</h2>
+	<!-- <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p> -->
+	<hr class="my-4">
+	<!-- <p>It uses utility classes for typography and spacing to space content out within the larger container.</p> -->
+	<div class="form-outline w-100 text-center">
+		<form action="http://127.0.0.1:3000/" method="post">
+			<div class="form-row">
+			  <div class="col-8">
+				<input type="text" class="form-control" name="searchTerm"  placeholder="What are you looking for?">
+			  </div>
+			  <div class="col">
+				<select class="custom-select" name="search_option">
+					<option selected value="anywhere">Anywhere</option>
+					<option value="title_only">Title Only</option>
+					<option value="lyricist_only">Song Writer Only</option>
+					<option value="source_only">Metaphor Source Domain Only</option>
+					<option value="target_only">Metaphor Target Domain Only</option>
+					<option value="metaphors_only">Metaphor Only</option>
+				</select>
+			  </div>
+			</div>
+			<div class="mt-2">
+				<!-- <button type="submit" value="submit" class="btn btn-dark btn-lg w-70">Search</button> -->
+				<button type="submit" value="submit" class="btn btn-dark w-70" class="btn"><i class="fa fa-search"></i> &nbsp;Search</button>
+			</div>
+		  </form>
+	</div>
+</div>
+<div class="container">
+	<!-- <form action="http://127.0.0.1:3000/" method="post">
+		<input type="text" class="searchTerm" name="searchTerm"  placeholder="What are you looking for?">
+    	<input type="submit" value="Submit">
+	</form> -->
+
+	{% if hits %}
+    <hgroup class="mb20">
+		<h2>Search Results</h2>
+		<h2 class="lead" id="results"><strong class="text-danger">{{ num_results }}</strong> results were found for the search for <strong class="text-danger">{{  query  }}</strong></h2>
+	</hgroup>
+	<h4><span>Tags: </span><ul id="tags" style="display: inline-block"></ul></h4>
+
+	<div class="container">
+		<div class="row">
+		  <div id='song_section' class="col-md-9">
+				{% for hit in hits %}
+				<div class="row" id="songs">
+					<div class="col-md-7">
+						<h4>{{ hit._source.title_si }} - {{ hit._source.title_en }}</h4>
+						<ul class="meta-search">
+							<li><i class="glyphicon glyphicon-tags"></i><span class="font-weight-bold">Singer : </span> <span>{{ hit._source.singer_si }} </span></li>
+							<li><i class="glyphicon glyphicon-tags"></i> <span class="font-weight-bold">Composer : </span><span>{{ hit._source.composer_si }}</span></li>
+							<li><i class="glyphicon glyphicon-tags"></i> <span class="font-weight-bold">Lyricist : </span><span>{{ hit._source.lyricist_si }}</span></li>
+							<li><i class="glyphicon glyphicon-tags"></i> <span class="font-weight-bold">Metaphor/s : </span><span>{{ hit._source.metaphor }}</span></li>
+							<li><i class="glyphicon glyphicon-tags"></i> <span class="font-weight-bold">Metaphor Source Domain/s : </span><span>{{ hit._source.source_domain_si }}</span></li>
+							<li><i class="glyphicon glyphicon-tags"></i> <span class="font-weight-bold">Metaphor Target Domain/s : </span><span>{{ hit._source.source_domain_en }}</span></li>
+						</ul>
+					</div>
+					<div class="col-md-4">
+						<p style="white-space: pre-line"><small>{{ hit._source.lyrics }}</small></p>
+					</div>
+				</div>
+				<span class="clearfix borda"></span>
+				{% endfor %}
+		  </div>
+
+		  <div id="agg" class="col-md-3">
+			{% for key,value in aggs.items() %}
+			<ul class="meta-search">{{ key }}
+			{% for bucket in value.buckets %}
+				<li><a id="myLink" href="#" name="{{ bucket.key }}" onclick="MyFunction(this)" >{{ bucket.key }}</a></li>
+			{% endfor %}
+			</ul>
+			{% endfor %}
+		  </div>
+		</div>
+	  </div>
+
+	{% else %}
+		{% if init %}
+		<hgroup class="mb20">
+			<!-- <h1>Sinhala Song Search Engine</h1>
+			<h2 class="lead">Please enter the search query in the box</strong></h2> -->
+		</hgroup>
+		{% else %}
+		<hgroup class="mb20 mt-2">
+			<h1>Search Results</h1>
+			<h2 class="lead"><strong class="text-danger">0</strong> results were found for the search for <strong class="text-danger">{{  query  }}</strong></h2>
+		</hgroup>
+		{% endif %}
+	{% endif %}
+</div>
